@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const counterRoutes = require("./routes/counterRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 
 const app = express();
 app.use(cors());
@@ -36,6 +37,7 @@ mongoose.connect(process.env.MONGODB_URL, {})
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/counter", counterRoutes);
+app.use("/api/contact", contactRoutes);
 
 // Start server
 
