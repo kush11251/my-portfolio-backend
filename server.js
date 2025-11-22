@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const counterRoutes = require("./routes/counterRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const contentRoutes = require("./routes/contentRoutes");
+const visitorRoutes = require("./routes/visitorRoutes");
 
 const app = express();
 app.use(cors());
@@ -40,6 +41,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/counter", counterRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/content", contentRoutes);
+app.use("/api/visitor", visitorRoutes);
 
 // Start server
 

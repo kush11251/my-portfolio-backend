@@ -1,0 +1,47 @@
+// controllers/visitorController.js
+import Visitor from "../models/Visitor.js";
+
+// Save visitor info + IP
+export const createVisitor = async (req, res) => {
+  try {
+    const ipAddress =
+      req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress;
+    const visitor = new Visitor({ ...req.body, ipAddress });
+    await visitor.save();
+    res.status(201).json(visitor);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get single visitor by UUID
+export const getVisitorByUUID = async (req, res) => {
+  try {
+    const visitor = await Visitor.findOne({ uuid: req.params.uuid });
+    if (!visitor) return res.status(404).json({ message: "Visitor not found" });
+    res.json(visitor);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get all visitors
+export const getAllVisitors = async (req, res) => {
+  try {
+    const visitors = await Visitor.find().sort({ createdAt: -1 });
+    res.json(visitors);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Query API — filter by any parameter
+export const queryVisitors = async (req, res) => {
+  try {
+    const query = req.body; // Can include any field like { browser: "Chrome" }
+    const visitors = await Visitor.find(query);
+    res.json(visitors);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
