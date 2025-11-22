@@ -44,13 +44,34 @@ export const getAllVisitors = async (req, res) => {
 // Query API — filter by any parameter
 export const queryVisitors = async (req, res) => {
   try {
-    const query = req.body; // Can include any field like { browser: "Chrome" }
-    const visitors = await Visitor.find(query);
+    const { not, ...normalQuery } = req.body;
+
+    const mongoQuery = { ...normalQuery };
+
+    // Handle NOT parameter
+    if (not) {
+      for (const key in not) {
+        const value = not[key];
+
+        // If NOT value is array → use $nin
+        if (Array.isArray(value)) {
+          mongoQuery[key] = { $nin: value };
+        } 
+        // Otherwise use $ne
+        else {
+          mongoQuery[key] = { $ne: value };
+        }
+      }
+    }
+
+    const visitors = await Visitor.find(mongoQuery);
     res.json(visitors);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Delete all visitors (for testing/admin purposes)
 export const deleteAllVisitors = async (req, res) => {
