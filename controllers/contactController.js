@@ -1,4 +1,5 @@
 const Contact = require("../models/Contact");
+const { sendContactMail, sendThankYouMail } = require("../mailer/mailService.js");
 
 // 1. Add new contact info (No token required)
 exports.addContact = async (req, res) => {
@@ -12,16 +13,22 @@ exports.addContact = async (req, res) => {
       message
     });
 
+    // Send email notification
+
+    await sendContactMail(req.body);
+
+    await sendThankYouMail(req.body);
+
     res.json({
       success: true,
-      message: "Contact information saved successfully",
+      message: "Contact information saved successfully! Message Sent",
       data: contact
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: "Failed to send message",
+      error: error.message,
     });
   }
 };
@@ -103,6 +110,25 @@ exports.getOneContact = async (req, res) => {
     res.status(500).json({
       success: false,
       message: error.message
+    });
+  }
+};
+
+// 5. Delete all contact information (Token required)
+exports.deleteAllContacts = async (req, res) => {
+  try {
+    const result = await Contact.deleteMany({});
+
+    res.json({
+      success: true,
+      message: "All contact records deleted successfully",
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete contacts",
+      error: error.message,
     });
   }
 };

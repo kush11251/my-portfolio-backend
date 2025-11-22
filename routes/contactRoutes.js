@@ -16,4 +16,6 @@ router.put("/update/:id", authMiddleware, contactController.updateContactStatus)
 // Token required — get one contact
 router.get("/:id", authMiddleware, contactController.getOneContact);
 
+router.delete("/delete-all/", authMiddleware, contactController.deleteAllContacts);
+
 module.exports = router;

@@ -1,6 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+
+const transporter = require("./mailer/mail.js");
+
 require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
@@ -44,6 +47,15 @@ app.use("/api/content", contentRoutes);
 app.use("/api/visitor", visitorRoutes);
 
 // Start server
+
+// Verify transporter connection
+transporter.verify((err, success) => {
+  if (err) {
+    console.error("❌ SMTP Error:", err);
+  } else {
+    console.log("✅ SMTP Server is ready!");
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
