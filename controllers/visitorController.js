@@ -29,7 +29,13 @@ export const getVisitorByUUID = async (req, res) => {
 export const getAllVisitors = async (req, res) => {
   try {
     const visitors = await Visitor.find().sort({ createdAt: -1 });
-    res.json(visitors);
+    const count = await Visitor.countDocuments();
+
+    res.json({
+      count,
+      visitors
+    });
+    
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
