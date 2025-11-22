@@ -51,3 +51,16 @@ export const queryVisitors = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Delete all visitors (for testing/admin purposes)
+export const deleteAllVisitors = async (req, res) => {
+  try {
+    const result = await Visitor.deleteMany({});
+    res.json({
+      message: "All visitor records have been deleted successfully",
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
